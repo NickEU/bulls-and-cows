@@ -28,4 +28,16 @@ class UserInterface {
             + (grade.getBulls() == 4 ? " Congrats!" : "")
             + " The secret code is " + target);
     }
+
+    void startRandomNum() {
+        int desiredLength = Integer.parseInt(new Scanner(System.in).nextLine().trim());
+        if (desiredLength > 10) {
+            System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.\n" +
+                "Please enter a number not greater than 10.");
+            return;
+        }
+
+        int result = PseudoRandom.generateNumber(desiredLength);
+        System.out.println("The random secret number is " + result + ".");
+    }
 }
