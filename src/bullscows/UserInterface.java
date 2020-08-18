@@ -1,16 +1,49 @@
 package bullscows;
 
+import java.util.Collections;
 import java.util.Scanner;
 
 class UserInterface {
+    private final Scanner sc = new Scanner(System.in);
+    private String secretNum;
+
     void start() {
-        String input = new Scanner(System.in).nextLine();
-        String target = "9999";
-        Grade grade = Grader.grade(input, target);
-        printGrade(grade, target);
+        if (secretCodeWasGenerated()) {
+            runGameLoop();
+        }
     }
 
-    private void printGrade(Grade grade, String target) {
+    private boolean secretCodeWasGenerated() {
+        System.out.println("Please, enter the secret code's length:");
+        int desiredLength = Integer.parseInt(sc.nextLine().trim());
+        if (desiredLength > 10) {
+            System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.\n" +
+                "Please enter a number not greater than 10.");
+            return false;
+        }
+        secretNum = PseudoRandom.generateNumber(desiredLength);
+        return true;
+    }
+
+    private void runGameLoop() {
+        System.out.print("Okay, let's start a game! Guess this number: "
+            + String.join("", Collections.nCopies(secretNum.length(), "*"))
+            + " It's your ");
+        int turn = 1;
+        boolean numberNotGuessed = true;
+        while(numberNotGuessed) {
+            System.out.println("Turn " + turn++ + ":");
+            String userGuess = sc.nextLine().trim();
+            Grade grade = Grader.grade(userGuess, secretNum);
+            printGrade(grade);
+            if (grade.getBulls() == secretNum.length()) {
+                numberNotGuessed = false;
+            }
+        }
+        System.out.println("Congratulations! You guessed the secret code.");
+    }
+
+    private void printGrade(Grade grade) {
         String result = "Grade: ";
         if (grade.getBulls() > 0) {
             result += grade.getBulls() + " bull(s)";
@@ -24,21 +57,6 @@ class UserInterface {
             result += "None.";
         }
 
-        System.out.println(result
-            + (grade.getBulls() == 4 ? " Congrats!" : "")
-            + " The secret code is " + target);
-    }
-
-    void startRandomNum() {
-        int desiredLength = Integer.parseInt(new Scanner(System.in).nextLine().trim());
-        if (desiredLength > 10) {
-            System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.\n" +
-                "Please enter a number not greater than 10.");
-            return;
-        }
-
-        String result = PseudoRandom.generateNumber(desiredLength);
-        System.out.println("The random secret number is " + result + ".");
-        //System.out.println(result);
+        System.out.println(result);
     }
 }
