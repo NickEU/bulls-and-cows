@@ -37,7 +37,8 @@ class UserInterface {
             return;
         }
 
-        int result = PseudoRandom.generateNumber(desiredLength);
+        String result = PseudoRandom.generateNumber(desiredLength);
         System.out.println("The random secret number is " + result + ".");
+        //System.out.println(result);
     }
 }
