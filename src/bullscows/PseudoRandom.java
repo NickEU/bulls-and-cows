@@ -1,21 +1,18 @@
 package bullscows;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 class PseudoRandom {
-    static String generateNumber(int desiredLen){
+    static String generateNumber(int desiredLen) {
+        Random rnd = new Random();
         StringBuilder result = new StringBuilder();
         while (result.length() < desiredLen) {
-            List<String> randomDigits = String.valueOf(System.nanoTime())
-                .chars().distinct().mapToObj(c -> String.valueOf((char) c))
-                .collect(Collectors.toList());
-            // who needs KISS when you've got this xD
-            randomDigits.removeAll(Arrays.asList(result.toString().split("")));
-            while (result.length() < desiredLen && randomDigits.size() > 0) {
-                result.append(randomDigits.remove(randomDigits.size() - 1));
-            }
+            int nextRandomDigit;
+            do {
+                nextRandomDigit = rnd.nextInt(10);
+            } while (result.indexOf(String.valueOf(nextRandomDigit)) != -1);
+
+            result.append(nextRandomDigit);
         }
         return result.toString();
     }
