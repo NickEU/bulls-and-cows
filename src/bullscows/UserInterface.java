@@ -1,5 +1,6 @@
 package bullscows;
 
+import java.util.Collections;
 import java.util.Scanner;
 
 class UserInterface {
@@ -25,7 +26,9 @@ class UserInterface {
     }
 
     private void runGameLoop() {
-        System.out.print("Okay, let's start a game! It's your ");
+        System.out.print("Okay, let's start a game! Guess this number: "
+            + String.join("", Collections.nCopies(secretNum.length(), "*"))
+            + " It's your ");
         int turn = 1;
         boolean numberNotGuessed = true;
         while(numberNotGuessed) {
