@@ -2,8 +2,11 @@ package bullscows;
 
 import java.util.Random;
 
-class PseudoRandom {
-    static String generateNumber(int desiredLen) {
+class Util {
+    static String generateDictionary(int possibleSymbols) {
+        return "";
+    }
+    static String generateSecretCode(int desiredLen, String dictionary) {
         Random rnd = new Random();
         StringBuilder result = new StringBuilder();
         while (result.length() < desiredLen) {

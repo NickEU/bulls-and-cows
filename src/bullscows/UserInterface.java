@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 class UserInterface {
     private final Scanner sc = new Scanner(System.in);
-    private String secretNum;
+    private String secretCode;
 
     void start() {
         if (secretCodeWasGenerated()) {
@@ -14,29 +14,39 @@ class UserInterface {
     }
 
     private boolean secretCodeWasGenerated() {
-        System.out.println("Please, enter the secret code's length:");
+        System.out.println("Input the length of the secret code:");
         int desiredLength = Integer.parseInt(sc.nextLine().trim());
-        if (desiredLength > 10) {
-            System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.\n" +
-                "Please enter a number not greater than 10.");
+        if (desiredLength > 36) {
+            System.out.println("Error: can't generate a secret number with a length" +
+                " of 37 because there aren't enough unique symbols(digits + lowercase english letters).\n" +
+                "Please enter a number not greater than 36.");
             return false;
         }
-        secretNum = PseudoRandom.generateNumber(desiredLength);
+        System.out.println("Input the number of possible symbols in the code:");
+        int desiredSymbols = Integer.parseInt(sc.nextLine().trim());
+        if (desiredLength > desiredSymbols) {
+            System.out.println("Error! The length of the secret code can't be bigger than" +
+                "the number of possible symbols");
+            return false;
+        }
+        String dict = Util.generateDictionary(desiredSymbols);
+        secretCode = Util.generateSecretCode(desiredLength, dict);
+        System.out.println("The secret is prepared: "
+            + String.join("", Collections.nCopies(secretCode.length(), "*"))
+            + " (" + dict + ").");
         return true;
     }
 
     private void runGameLoop() {
-        System.out.print("Okay, let's start a game! Guess this number: "
-            + String.join("", Collections.nCopies(secretNum.length(), "*"))
-            + " It's your ");
+        System.out.print("Okay, let's start a game! It's your ");
         int turn = 1;
         boolean numberNotGuessed = true;
-        while(numberNotGuessed) {
+        while (numberNotGuessed) {
             System.out.println("Turn " + turn++ + ":");
             String userGuess = sc.nextLine().trim();
-            Grade grade = Grader.grade(userGuess, secretNum);
+            Grade grade = Grader.grade(userGuess, secretCode);
             printGrade(grade);
-            if (grade.getBulls() == secretNum.length()) {
+            if (grade.getBulls() == secretCode.length()) {
                 numberNotGuessed = false;
             }
         }
