@@ -15,22 +15,22 @@ class UserInterface {
 
     private boolean secretCodeWasGenerated() {
         System.out.println("Input the length of the secret code:");
-        int desiredLength = Integer.parseInt(sc.nextLine().trim());
-        if (desiredLength > 36) {
+        int desiredCodeLength = Integer.parseInt(sc.nextLine().trim());
+        if (desiredCodeLength > 36) {
             System.out.println("Error: can't generate a secret number with a length" +
                 " of 37 because there aren't enough unique symbols(digits + lowercase english letters).\n" +
                 "Please enter a number not greater than 36.");
             return false;
         }
         System.out.println("Input the number of possible symbols in the code:");
-        int desiredSymbols = Integer.parseInt(sc.nextLine().trim());
-        if (desiredLength > desiredSymbols) {
+        int desiredSymbolsInDict = Integer.parseInt(sc.nextLine().trim());
+        if (desiredCodeLength > desiredSymbolsInDict) {
             System.out.println("Error! The length of the secret code can't be bigger than" +
                 "the number of possible symbols");
             return false;
         }
-        String dict = Util.generateDictionary(desiredSymbols);
-        secretCode = Util.generateSecretCode(desiredLength, dict);
+        String dict = Util.generateDictionary(desiredSymbolsInDict);
+        secretCode = Util.generateSecretCode(desiredCodeLength, dict);
         System.out.println("The secret is prepared: "
             + String.join("", Collections.nCopies(secretCode.length(), "*"))
             + " (" + dict + ").");
@@ -40,14 +40,14 @@ class UserInterface {
     private void runGameLoop() {
         System.out.print("Okay, let's start a game! It's your ");
         int turn = 1;
-        boolean numberNotGuessed = true;
-        while (numberNotGuessed) {
+        boolean codeNotGuessed = true;
+        while (codeNotGuessed) {
             System.out.println("Turn " + turn++ + ":");
             String userGuess = sc.nextLine().trim();
             Grade grade = Grader.grade(userGuess, secretCode);
             printGrade(grade);
             if (grade.getBulls() == secretCode.length()) {
-                numberNotGuessed = false;
+                codeNotGuessed = false;
             }
         }
         System.out.println("Congratulations! You guessed the secret code.");
