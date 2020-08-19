@@ -8,14 +8,9 @@ class Util {
         char letter = 'a';
         StringBuilder result = new StringBuilder();
         while (result.length() < possibleSymbols) {
-            if (result.length() == 35) {
-                System.out.println("s");
-            }
             if (result.length() < 10) {
-                System.out.println(digit);
                 result.append(digit++);
             } else {
-                System.out.println(letter);
                 result.append(letter++);
             }
         }
@@ -25,12 +20,12 @@ class Util {
         Random rnd = new Random();
         StringBuilder result = new StringBuilder();
         while (result.length() < desiredLen) {
-            int nextRandomDigit;
+            char nextRandomSymbol;
             do {
-                nextRandomDigit = rnd.nextInt(10);
-            } while (result.indexOf(String.valueOf(nextRandomDigit)) != -1);
+                nextRandomSymbol = dictionary.charAt(rnd.nextInt(dictionary.length()));
+            } while (result.indexOf(String.valueOf(nextRandomSymbol)) != -1);
 
-            result.append(nextRandomDigit);
+            result.append(nextRandomSymbol);
         }
         return result.toString();
     }
