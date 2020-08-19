@@ -5,10 +5,10 @@ class Grader {
         int cows = 0;
         int bulls = 0;
         for (int i = 0; i < input.length(); i++) {
-            char digit = input.charAt(i);
-            if (target.charAt(i) == digit) {
+            char symbol = input.charAt(i);
+            if (target.charAt(i) == symbol) {
                 bulls++;
-            } else if (target.indexOf(digit) != -1) {
+            } else if (target.indexOf(symbol) != -1) {
                 cows++;
             }
         }
