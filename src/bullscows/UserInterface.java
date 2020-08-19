@@ -5,7 +5,10 @@ import java.util.Scanner;
 
 class UserInterface {
     private final Scanner sc = new Scanner(System.in);
+    private int desiredCodeLength;
+    private int desiredSymbolsInDict;
     private String secretCode;
+
 
     void start() {
         if (secretCodeWasGenerated()) {
@@ -15,18 +18,11 @@ class UserInterface {
 
     private boolean secretCodeWasGenerated() {
         System.out.println("Input the length of the secret code:");
-        int desiredCodeLength = Integer.parseInt(sc.nextLine().trim());
-        if (desiredCodeLength > 36) {
-            System.out.println("Error: can't generate a secret number with a length" +
-                " of 37 because there aren't enough unique symbols(digits + lowercase english letters).\n" +
-                "Please enter a number not greater than 36.");
+        if (!gotLegalCodeLengthFromUser()) {
             return false;
         }
         System.out.println("Input the number of possible symbols in the code:");
-        int desiredSymbolsInDict = Integer.parseInt(sc.nextLine().trim());
-        if (desiredCodeLength > desiredSymbolsInDict) {
-            System.out.println("Error! The length of the secret code can't be bigger than" +
-                "the number of possible symbols");
+        if (!gotLegalDictLengthFromUser()) {
             return false;
         }
         String dict = Util.generateDictionary(desiredSymbolsInDict);
@@ -35,6 +31,53 @@ class UserInterface {
             + String.join("", Collections.nCopies(secretCode.length(), "*"))
             + " (" + dict + ").");
         return true;
+    }
+
+    private boolean gotLegalDictLengthFromUser() {
+        desiredSymbolsInDict = getLengthFromUser();
+        if (desiredSymbolsInDict < 0) {
+            return false;
+        }
+        if (desiredCodeLength > desiredSymbolsInDict) {
+            System.out.printf(
+                "Error: it's not possible to generate a code with a length of %d with %d unique symbols.",
+                desiredCodeLength, desiredSymbolsInDict);
+            return false;
+        }
+        if (desiredSymbolsInDict > 36) {
+            System.out.println("Error: Length is invalid! Maximum number of possible symbols in the code is 36 (0-9, a-z).");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean gotLegalCodeLengthFromUser() {
+        desiredCodeLength = getLengthFromUser();
+        if (desiredCodeLength < 0) {
+            return false;
+        }
+        if (desiredCodeLength > 36) {
+            System.out.println("Error: can't generate a secret number with a length" +
+                " of 37 because there aren't enough unique symbols(digits + lowercase english letters).\n" +
+                "Please enter a number not greater than 36.");
+            return false;
+        }
+        return true;
+    }
+
+    private int getLengthFromUser() {
+        String userInput = sc.nextLine().trim();
+        try {
+            int number = Integer.parseInt(userInput);
+            if (number <= 0) {
+                System.out.println("Error: Length is invalid! Can only be a positive number between 1 and 36");
+                return -1;
+            }
+            return number;
+        } catch(NumberFormatException e) {
+            System.out.println("Error: \"" + userInput + "\" is an invalid number.");
+            return -1;
+        }
     }
 
     private void runGameLoop() {
